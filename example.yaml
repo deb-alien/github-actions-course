@@ -1,0 +1,20 @@
+name: 'Hello World'
+
+# Dictionary
+config:
+    path: first/second/third
+    environment: production
+    version: 1.0.0
+
+# List
+colors:
+    - red
+    - green
+    - blue
+
+# list of dictionaries
+users:
+    - name: Alice
+      age: 30
+    - name: Bob
+      age: 25
