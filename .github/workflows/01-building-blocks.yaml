@@ -1,6 +1,6 @@
 name: 01 - Building Blocks # Workflow name
 on: # Trigger the workflow on push or on a schedule
-    push:
+    # push:
     workflow_dispatch:
 
 jobs: # Define the jobs to run in the workflow
