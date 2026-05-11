@@ -12,7 +12,7 @@ jobs: # Define the jobs to run in the workflow
     echo-goodbye: # Job name
         runs-on: ubuntu-latest # The type of runner to run the job on
         steps: # Steps to execute in the job
-            - name: Failed Step
-              run: echo "I will Fail" && exit 1
+            - name: Successful Step
+              run: echo "I will Succeed"
             - name: Say Goodbye
               run: echo "Goodbye!"
