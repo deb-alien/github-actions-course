@@ -1,17 +1,17 @@
-name: 01 - Building Blocks
-on:
-    # push:
+name: 01 - Building Blocks # Workflow name
+on: # Trigger the workflow on push or on a schedule
+    push:
     workflow_dispatch:
 
-jobs:
-    echo-hello:
-        runs-on: ubuntu-latest
-        steps:
+jobs: # Define the jobs to run in the workflow
+    echo-hello: # Job name
+        runs-on: ubuntu-latest # The type of runner to run the job on
+        steps: # Steps to execute in the job
             - name: Say Hello
               run: echo "Hello, World!"
-    echo-goodbye:
-        runs-on: ubuntu-latest
-        steps:
+    echo-goodbye: # Job name
+        runs-on: ubuntu-latest # The type of runner to run the job on
+        steps: # Steps to execute in the job
             - name: Failed Step
               run: echo "I will Fail" && exit 1
             - name: Say Goodbye
