@@ -7,8 +7,6 @@ on:
 jobs:
     echo-data:
         runs-on: ubuntu-latest
-        env:
-            MY_VAR: "Hello, I'm a custom environment variable!"
         steps:
             - name: Display Information
               run: |
