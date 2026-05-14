@@ -14,4 +14,3 @@ This repository contains the code and resources for a course on GitHub Actions. 
 ## Getting Started
 
 To get started with the course, simply clone this repository and follow the instructions in the README files for each module. Each module contains detailed explanations, code examples, and exercises to help you learn GitHub Actions effectively.
-
