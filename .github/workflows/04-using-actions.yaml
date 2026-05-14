@@ -1,6 +1,8 @@
 name: 04 - Using Actions
 
-on: push
+on:
+    # push:
+    workflow_dispatch:
 
 jobs:
     build:
