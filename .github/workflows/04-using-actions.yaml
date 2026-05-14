@@ -11,13 +11,13 @@ jobs:
         steps:
             #* 0. Checkout the code for repository and setup nodejs environment
             - name: Checkout code
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
 
             - name: Print Folders
               run: ls -la
 
             - name: Setup NodeJS
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v6
               with:
                   node-version: '24.15.0'
 
