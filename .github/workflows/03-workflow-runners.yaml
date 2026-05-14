@@ -10,7 +10,8 @@ jobs:
               run: |
                   echo "this job in running on a ubuntu runner"
                   echo "Runner OS: $RUNNER_OS"
-                  echo "OS INFO: ${{ runner.os}}"
+                  echo "OS INFO: ${{ runner.os }}"
+
     windows-runner:
         runs-on: windows-latest
         steps:
@@ -19,7 +20,8 @@ jobs:
               run: |
                   echo "this job in running on a windows runner"
                   echo "Runner OS: $RUNNER_OS"
-                  echo "OS INFO: ${{ runner.os}}"
+                  echo "OS INFO: ${{ runner.os }}"
+
     macos-runner:
         runs-on: macos-latest
         steps:
@@ -27,4 +29,4 @@ jobs:
               run: |
                   echo "this job in running on a macOS runner"
                   echo "Runner OS: $RUNNER_OS"
-                  echo "OS INFO: ${{ runner.os}}"
+                  echo "OS INFO: ${{ runner.os }}"
