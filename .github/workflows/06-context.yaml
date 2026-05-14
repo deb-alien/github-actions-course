@@ -1,5 +1,5 @@
 name: 06 - Contexts
-run-name: My Custom Workflow Name - ${{ inputs.debug}}
+run-name: 06 - Contexts | DEBUG - ${{ inputs.debug }}
 
 on:
     push:
