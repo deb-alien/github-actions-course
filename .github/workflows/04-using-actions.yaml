@@ -4,18 +4,27 @@ on: push
 
 jobs:
     build:
+        defaults:
+            run:
+                working-directory: 04-using-actions/react-app
         runs-on: ubuntu-latest
         steps:
             #* 0. Checkout the code for repository and setup nodejs environment
             - name: Checkout code
               uses: actions/checkout@v4
+
             - name: Print Folders
               run: ls -la
+
             - name: Setup NodeJS
               uses: actions/setup-node@v3
               with:
                   node-version: '24.15.0'
+
             #* 1. Install deps for out react application
             - name: Install dependencies
-              working-directory: 04-using-actions/react-app
               run: npm ci
+
+            #* 2. Run tests for our react application
+            - name: Run Unit tests
+              run: npm run lint
