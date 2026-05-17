@@ -35,7 +35,7 @@ jobs:
         steps:
             - name: Print Workflow Env Variable
               run: |
-                  echo "Environment variable: ${{ vars.TARGET_VAR || 'VARIABLE DOES NOT EXISTS' }}"
+                  echo "My var: ${{ vars.MY_VAR }}"
                   echo "Repository variable ${{ vars.REPOSITORY_VAR || 'VARIABLE DOES NOT EXISTS' }}"
     echo-prod:
         runs-on: ubuntu-latest
@@ -43,6 +43,5 @@ jobs:
         steps:
             - name: Print Prod Environment Variable
               run: |
-                  echo "Environment variable: ${{ vars.TARGET_VAR || 'VARIABLE DOES NOT EXISTS' }}"
                   echo "Environment variable: ${{ vars.TARGET_VAR || 'VARIABLE DOES NOT EXISTS' }}"
                   echo "Repository variable ${{ vars.REPOSITORY_VAR || 'VARIABLE DOES NOT EXISTS' }}"
