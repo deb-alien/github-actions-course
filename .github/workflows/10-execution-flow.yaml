@@ -18,11 +18,12 @@ jobs:
 
     unit-test:
         runs-on: ubuntu-latest
+        continue-on-error: true
         needs: lint-build
         steps:
             - name: Run Unit Tests
               run: echo "Running Unit Tests"
-            - name: Faliling Tests
+            - name: Flailing Tests
               if: ${{ !inputs.pass-unit-tests}}
               run: exit 1
 
