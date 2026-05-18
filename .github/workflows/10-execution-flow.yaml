@@ -18,7 +18,6 @@ jobs:
 
     unit-test:
         runs-on: ubuntu-latest
-        continue-on-error: true
         needs: lint-build
         steps:
             - name: Run Unit Tests
