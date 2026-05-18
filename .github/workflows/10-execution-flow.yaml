@@ -1,4 +1,4 @@
-name: 10 - Controling Execution Flow
+name: 10 - Controlling Execution Flow
 
 on:
     workflow_dispatch:
@@ -15,7 +15,7 @@ jobs:
         steps:
             - name: Lint and Build
               run: echo "I am linting and building the code"
-              
+
     unit-test:
         runs-on: ubuntu-latest
         needs: lint-build
