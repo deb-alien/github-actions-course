@@ -1,0 +1,61 @@
+name: 10 - Controling Execution Flow
+
+on:
+    workflow_dispatch:
+        inputs:
+            pass-unit-tests:
+                description: 'Should I pass unit tests?'
+                required: true
+                type: boolean
+                default: true
+
+jobs:
+    lint-build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Lint and Build
+              run: echo "I am linting and building the code"
+              
+    unit-test:
+        runs-on: ubuntu-latest
+        needs: lint-build
+        steps:
+            - name: Run Unit Tests
+              run: echo "Running Unit Tests"
+            - name: Faliling Tests
+              if: ${{ !inputs.pass-unit-tests}}
+              run: exit 1
+
+    deploy-non-prod:
+        runs-on: ubuntu-latest
+        needs:
+            - lint-build
+            - unit-test
+        steps:
+            - name: Deploy to Non-Prod Environment
+              run: echo "Deploying to non-prod environment"
+
+    e2e-test:
+        runs-on: ubuntu-latest
+        needs:
+            - deploy-non-prod
+        steps:
+            - name: Run E2E Tests
+              run: echo "Running E2E Tests"
+
+    load-test:
+        runs-on: ubuntu-latest
+        needs:
+            - deploy-non-prod
+        steps:
+            - name: Run Load Tests
+              run: echo "Running Load Tests"
+
+    deploy-prod:
+        runs-on: ubuntu-latest
+        needs:
+            - e2e-test
+            - load-test
+        steps:
+            - name: Deploy to Prod Environment
+              run: echo "Deploying to prod environment"
