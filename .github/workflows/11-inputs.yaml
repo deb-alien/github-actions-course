@@ -16,6 +16,8 @@ on:
                     - v1
                     - v2
                     - v3
+                default: v3
+                description: 'Which tag to build from'
 
 jobs:
     build:
@@ -27,10 +29,10 @@ jobs:
     deploy:
         runs-on: ubuntu-latest
         environment: ${{ inputs.target }}
+        if: ${{ !inputs.dry-run }}
         needs:
             - build
         steps:
             - name: Deploy
-              if: ${{ !inputs.dry-run}}
               run: |
                   echo "Deploying to ${{ inputs.target }} environment"
