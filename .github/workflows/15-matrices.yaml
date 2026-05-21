@@ -13,11 +13,20 @@ jobs:
                 os:
                     - ubuntu-latest
                     - windows-latest
+                include:
+                    - node-version: 20.x
+                      os: ubuntu-latest
+                    - node-version: 24.x
+                      os: ubuntu-latest
+                      tag: experimental
         steps:
             - name: Setup Node.js
               uses: actions/setup-node@v6
               with:
                   node-version: ${{ matrix.node-version }}
+            - name: Fail if experimental
+              if: matrix.tag == 'experimental'
+              run: exit 1
             - name: Perform Tests
               run: |
                   echo "Running tests on OS: ${{ matrix.os }} with Node.js version: ${{ matrix.node-version }}"
