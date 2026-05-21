@@ -48,5 +48,6 @@ jobs:
               uses: actions/download-artifact@v8
               with:
                   name: app
+                  path: dist
             - name: Show Folder Structure
               run: ls -R
