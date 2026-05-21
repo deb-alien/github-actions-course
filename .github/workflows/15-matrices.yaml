@@ -30,3 +30,6 @@ jobs:
             - name: Perform Tests
               run: |
                   echo "Running tests on OS: ${{ matrix.os }} with Node.js version: ${{ matrix.node-version }}"
+                  sleep 10
+            - name: Upload Test Results
+              run: echo "Uploading test results."
