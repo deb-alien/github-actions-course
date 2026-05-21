@@ -47,5 +47,6 @@ jobs:
             - name: Download Build Files
               uses: actions/download-artifact@v8
               with:
-                name: app
-            
+                  name: app
+            - name: Show Folder Structure
+              run: ls -R
