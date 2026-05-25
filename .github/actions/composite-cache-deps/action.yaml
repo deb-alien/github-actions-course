@@ -11,8 +11,14 @@ inputs:
         required: false
         default: .
     target-env:
-        description: The target environment to deploy to
+        description: "'dev' or 'prod'. Controls whether to install all dependencies or only production dependencies."
         required: true
+
+outputs:
+    installed-deps:
+        description: 'A message indicating whether dependencies were installed or retrieved from cache.'
+        value: ${{ steps.cache.outputs.cache-hit != 'true' && 'Dependencies installed' || 'Dependencies retrieved from cache' }}
+
 runs:
     using: composite
     steps:
@@ -28,6 +34,11 @@ runs:
               key: deps-${{ inputs.node-version }}-${{ hashFiles(format('{0}/{1}', inputs.work-dir, 'package-lock.json')) }}
         - name: 'Install Dependencies'
           if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-          run: ${{ inputs.target-env == 'dev' && 'npm ci' || 'npm ci --only=production' }}
+          run: |
+            if [ "${{ inputs.target-env }}" = "dev" ]; then
+                npm ci
+            else
+                npm ci --only=production
+            fi
           shell: bash
           working-directory: ${{ inputs.work-dir }}
