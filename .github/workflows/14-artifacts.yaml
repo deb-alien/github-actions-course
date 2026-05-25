@@ -39,7 +39,7 @@ jobs:
             - name: Upload Build Artifacts
               uses: actions/upload-artifact@v7
               with:
-                  name: ${{ env.build-artifact-key}}
+                  name: ${{ env.build-artifact-key }}
                   path: 14-artifacts/react-app/dist
 
     deploy:
