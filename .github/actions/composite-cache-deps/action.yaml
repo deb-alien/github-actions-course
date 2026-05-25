@@ -35,10 +35,10 @@ runs:
         - name: 'Install Dependencies'
           if: ${{ steps.cache.outputs.cache-hit != 'true' }}
           run: |
-            if [ "${{ inputs.target-env }}" = "dev" ]; then
-                npm ci
-            else
-                npm ci --only=production
-            fi
+              if [ "${{ inputs.target-env }}" = "dev" ]; then
+                  npm ci
+              else
+                  npm ci --only=production
+              fi
           shell: bash
           working-directory: ${{ inputs.work-dir }}
