@@ -13,6 +13,7 @@ inputs:
     target-env:
         description: "'dev' or 'prod'. Controls whether to install all dependencies or only production dependencies."
         required: true
+        default: dev
 
 outputs:
     installed-deps:
