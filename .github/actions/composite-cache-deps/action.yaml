@@ -37,9 +37,9 @@ runs:
           if: ${{ steps.cache.outputs.cache-hit != 'true' }}
           run: |
               if [ "${{ inputs.target-env }}" = "dev" ]; then
-                  npm ci
+                  npm ci 
               else
-                  npm ci --only=production
+                  npm ci --omit=dev
               fi
           shell: bash
           working-directory: ${{ inputs.work-dir }}
