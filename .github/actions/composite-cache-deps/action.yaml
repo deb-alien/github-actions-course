@@ -10,7 +10,9 @@ inputs:
         description: The working directory of the application
         required: false
         default: .
-
+    target-env:
+        description: The target environment to deploy to
+        required: true
 runs:
     using: composite
     steps:
@@ -26,6 +28,11 @@ runs:
               key: deps-${{ inputs.node-version }}-${{ hashFiles(format('{0}/{1}', inputs.work-dir, 'package-lock.json')) }}
         - name: 'Install Dependencies'
           if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-          run: npm ci
+          run: |
+            if [ "${{ inputs.target-env }}" = "prod" ]; then
+              npm ci --only=production
+            else
+              npm ci
+            fi
           shell: bash
           working-directory: ${{ inputs.work-dir }}

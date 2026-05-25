@@ -30,6 +30,7 @@ jobs:
               with:
                   node-version: 25.x
                   work-dir: ${{ env.WORKING_DIR }}
+                  target-env: ${{ inputs.target-env }}
 
             - name: Test
               run: npm run lint
