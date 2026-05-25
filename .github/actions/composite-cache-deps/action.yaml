@@ -28,11 +28,6 @@ runs:
               key: deps-${{ inputs.node-version }}-${{ hashFiles(format('{0}/{1}', inputs.work-dir, 'package-lock.json')) }}
         - name: 'Install Dependencies'
           if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-          run: |
-              if [ "${{ inputs.target-env }}" = "prod" ]; then
-                npm ci --only=production
-              else
-                npm ci
-              fi
+          run: ${{ inputs.target-env == 'dev' && 'npm ci' || 'npm ci --only=production' }}
           shell: bash
           working-directory: ${{ inputs.work-dir }}
