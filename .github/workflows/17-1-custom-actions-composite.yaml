@@ -32,7 +32,7 @@ jobs:
                   work-dir: ${{ env.WORKING_DIR }}
 
             - name: Test
-              run: npm lint
+              run: npm run lint
 
             - name: Build
               run: npm run build
