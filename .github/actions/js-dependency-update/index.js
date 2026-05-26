@@ -1,7 +1,7 @@
-import core from '@actions/core';
+const core = require('@actions/core');
 
 async function run() {
-	core.info('I am a custom JS action');
+	core.info('Hello from the JS Dependency Update Action!');
 }
 
 await run();
