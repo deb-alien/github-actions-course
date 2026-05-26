@@ -1,7 +1,7 @@
-const core = require('@actions/core');
+import { info } from '@actions/core';
 
 async function run() {
-	core.info('Hello from the JS Dependency Update Action!');
+	info('Hello from the JS Dependency Update Action!');
 }
 
 await run();
