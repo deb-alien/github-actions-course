@@ -32,12 +32,12 @@ runs:
           uses: actions/cache@v5
           with:
               path: ${{ inputs.work-dir }}/node_modules
-              key: deps-${{ inputs.node-version }}-${{ hashFiles(format('{0}/{1}', inputs.work-dir, 'package-lock.json')) }}
+              key: deps-${{ inputs.target-env }}-${{ hashFiles(format('{0}/{1}', inputs.work-dir, 'package-lock.json')) }}
         - name: 'Install Dependencies'
           if: ${{ steps.cache.outputs.cache-hit != 'true' }}
           run: |
               if [ "${{ inputs.target-env }}" = "dev" ]; then
-                  npm ci 
+                  npm ci
               else
                   npm ci --omit=dev
               fi
