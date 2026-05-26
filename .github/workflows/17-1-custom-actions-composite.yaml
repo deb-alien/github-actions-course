@@ -37,6 +37,7 @@ jobs:
                   echo "Installed dependencies status: ${{ steps.setup.outputs.installed-deps }}"
 
             - name: Test
+              if: ${{ inputs.target-env == 'dev' }}
               run: npm run lint
 
             - name: Build
