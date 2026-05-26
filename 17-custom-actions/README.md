@@ -1,0 +1,1 @@
+Workflow for this project will not work in prod env cause the vite needs dev dependencies to build the project. So setting the target-env to prod skips the installation of dev dependencies, so chose dev env to run the workflow successfully.
