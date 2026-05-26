@@ -35,11 +35,6 @@ runs:
               key: deps-${{ inputs.target-env }}-${{ hashFiles(format('{0}/{1}', inputs.work-dir, 'package-lock.json')) }}
         - name: 'Install Dependencies'
           if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-          run: |
-              if [ "${{ inputs.target-env }}" = "dev" ]; then
-                  npm ci
-              else
-                  npm ci --omit=dev
-              fi
+          run: ${{ inputs.target-env == 'prod' && 'npm ci --omit=dev' || 'npm ci' }}
           shell: bash
           working-directory: ${{ inputs.work-dir }}
