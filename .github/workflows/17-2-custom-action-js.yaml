@@ -9,6 +9,6 @@ jobs:
         steps:
             - name: Checkout Code
               uses: actions/checkout@v6
-              
+
             - name: Check of dependency updates
               uses: ./.github/actions/js-dependency-update
