@@ -1,4 +1,5 @@
 name: 17 - 2 - Custom Action - JS
+run-name: 17 - 2 - Custom Action - JS
 
 on:
     workflow_dispatch:
