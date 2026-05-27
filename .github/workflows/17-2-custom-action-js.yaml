@@ -33,6 +33,7 @@ jobs:
               uses: actions/checkout@v6
 
             - name: Run custom JavaScript action
+              id: update-dependencies
               uses: ./.github/actions/custom-action-js
               with:
                   base-branch: ${{ github.event.inputs.base-branch }}
@@ -40,3 +41,6 @@ jobs:
                   working-directory: ${{ github.event.inputs.working-directory }}
                   debug: ${{ github.event.inputs.debug }}
                   gh-token: ${{ secrets.GITHUB_TOKEN }}
+            - name: Log update availability
+              run: |
+                echo "Update available: ${{ steps.update-dependencies.outputs.update_available }}"
