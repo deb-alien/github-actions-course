@@ -1,0 +1,41 @@
+name: 17 - 2 - Custom Action JS
+run-name: 17 - 2 - Custom Action JS
+
+on:
+    workflow_dispatch:
+        inputs:
+            base-branch:
+                description: 'The base branch to compare against.'
+                required: false
+                default: 'main'
+            head-branch:
+                description: 'The head branch to compare against.'
+                required: false
+                default: 'dependency-update'
+            working-directory:
+                description: 'The working directory for the action.'
+                required: false
+                default: '17-custom-actions/react-app'
+            debug:
+                description: 'Enable debug mode.'
+                required: false
+                default: 'false'
+            gh-token:
+                description: 'GitHub token for authentication.'
+                required: true
+
+jobs:
+    update-dependencies:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+
+            - name: Run custom JavaScript action
+              uses: ./.github/actions/custom-action-js
+              with:
+                  base-branch: ${{ github.event.inputs.base-branch }}
+                  head-branch: ${{ github.event.inputs.head-branch }}
+                  working-directory: ${{ github.event.inputs.working-directory }}
+                  debug: ${{ github.event.inputs.debug }}
+                  gh-token: ${{ github.event.inputs.gh-token }}

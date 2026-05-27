@@ -1,0 +1,27 @@
+name: 17 - 2 - Custom Action JS
+description: A custom JavaScript action that logs a message to the console.
+
+inputs:
+    base-branch:
+        description: 'The base branch to compare against.'
+        required: false
+        default: 'main'
+    head-branch:
+        description: 'The head branch to compare against.'
+        required: false
+        default: 'dependency-update'
+    working-directory:
+        description: 'The working directory for the action.'
+        required: false
+        default: '17-custom-actions/react-app'
+    gh-token:
+        description: 'GitHub token for authentication.'
+        required: true
+    debug:
+        description: 'Enable debug mode.'
+        required: false
+        default: 'false'
+
+runs:
+    using: 'node12'
+    main: 'dist/index.js'
