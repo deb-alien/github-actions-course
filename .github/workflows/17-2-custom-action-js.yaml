@@ -18,7 +18,7 @@ on:
                 required: true
             gh_token:
                 description: 'Authentication token with repository access. Must have write access to contents and pull-requests'
-                required: true
+                required: false
             debug:
                 description: 'Whether the output debug messages to the console'
                 default: 'false'
