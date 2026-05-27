@@ -1,4 +1,4 @@
-import { getBooleanInput, getInput, setSecret } from '@actions/core';
+import { getBooleanInput, getInput, info, setSecret, error } from '@actions/core';
 
 const validateBranchName = ({ branchName }) => /^[a-zA-Z0-9_\-\.\/]+$/.test(branchName);
 const validateDirectoryName = ({ dirName }) => /^[a-zA-Z0-9_\-\/]+$/.test(dirName);
@@ -6,14 +6,14 @@ const validateDirectoryName = ({ dirName }) => /^[a-zA-Z0-9_\-\/]+$/.test(dirNam
 const setupLogger = ({ debug, prefix } = { debug: false, prefix: '' }) => ({
 	debug: (message) => {
 		if (debug) {
-			core.info(`DEBUG ${prefix}${prefix ? ' : ' : ''}${message}`);
+			info(`DEBUG ${prefix}${prefix ? ' : ' : ''}${message}`);
 		}
 	},
 	info: (message) => {
-		core.info(`${prefix}${prefix ? ' : ' : ''}${message}`);
+		info(`${prefix}${prefix ? ' : ' : ''}${message}`);
 	},
 	error: (message) => {
-		core.error(`${prefix}${prefix ? ' : ' : ''}${message}`);
+		error(`${prefix}${prefix ? ' : ' : ''}${message}`);
 	},
 });
 

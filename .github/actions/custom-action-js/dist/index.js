@@ -27994,14 +27994,14 @@ const validateDirectoryName = ({ dirName }) => /^[a-zA-Z0-9_\-\/]+$/.test(dirNam
 const setupLogger = ({ debug, prefix } = { debug: false, prefix: '' }) => ({
 	debug: (message) => {
 		if (debug) {
-			core.info(`DEBUG ${prefix}${prefix ? ' : ' : ''}${message}`);
+			(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__/* .info */ .pq)(`DEBUG ${prefix}${prefix ? ' : ' : ''}${message}`);
 		}
 	},
 	info: (message) => {
-		core.info(`${prefix}${prefix ? ' : ' : ''}${message}`);
+		(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__/* .info */ .pq)(`${prefix}${prefix ? ' : ' : ''}${message}`);
 	},
 	error: (message) => {
-		core.error(`${prefix}${prefix ? ' : ' : ''}${message}`);
+		(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__/* .error */ .z3)(`${prefix}${prefix ? ' : ' : ''}${message}`);
 	},
 });
 
@@ -28054,12 +28054,14 @@ __webpack_async_result__();
 
 // EXPORTS
 __nccwpck_require__.d(__webpack_exports__, {
+  z3: () => (/* binding */ error),
   Vt: () => (/* binding */ getBooleanInput),
   V4: () => (/* binding */ getInput),
+  pq: () => (/* binding */ info),
   Pq: () => (/* binding */ core_setSecret)
 });
 
-// UNUSED EXPORTS: ExitCode, addPath, debug, endGroup, error, exportVariable, getIDToken, getMultilineInput, getState, group, info, isDebug, markdownSummary, notice, platform, saveState, setCommandEcho, setFailed, setOutput, startGroup, summary, toPlatformPath, toPosixPath, toWin32Path, warning
+// UNUSED EXPORTS: ExitCode, addPath, debug, endGroup, exportVariable, getIDToken, getMultilineInput, getState, group, isDebug, markdownSummary, notice, platform, saveState, setCommandEcho, setFailed, setOutput, startGroup, summary, toPlatformPath, toPosixPath, toWin32Path, warning
 
 ;// CONCATENATED MODULE: external "os"
 const external_os_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("os");
@@ -30896,7 +30898,7 @@ function core_debug(message) {
  * @param properties optional properties to add to the annotation.
  */
 function error(message, properties = {}) {
-    issueCommand('error', toCommandProperties(properties), message instanceof Error ? message.toString() : message);
+    command_issueCommand('error', utils_toCommandProperties(properties), message instanceof Error ? message.toString() : message);
 }
 /**
  * Adds a warning issue
@@ -30919,7 +30921,7 @@ function notice(message, properties = {}) {
  * @param message info message
  */
 function info(message) {
-    process.stdout.write(message + os.EOL);
+    process.stdout.write(message + external_os_namespaceObject.EOL);
 }
 /**
  * Begin an output group.
