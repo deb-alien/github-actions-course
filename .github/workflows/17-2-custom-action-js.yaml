@@ -14,12 +14,14 @@ on:
                 default: 'dependency-update'
             working_directory:
                 description: 'The working directory of the project to check for dependency updates'
+                default: '17-custom-action/react-app'
                 required: true
             gh_token:
                 description: 'Authentication token with repository access. Must have write access to contents and pull-requests'
                 required: true
             debug:
                 description: 'Whether the output debug messages to the console'
+                default: 'false'
                 required: false
 
 jobs:
