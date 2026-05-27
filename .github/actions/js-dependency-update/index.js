@@ -60,9 +60,10 @@ async function run() {
 
 	// Check for modified package.json or package-lock.json files
 	const gitStatus = await getExecOutput('git status -s package*.json', [], { cwd: workingDirectory });
-	if (gitStatus.stdout.length <= 0) {
-		info(`[js-dependency-update] : No package.json files found in the working directory, exiting.`);
-		return;
+	if (gitStatus.stdout.length > 0) {
+		info(`[js-dependency-update] : Found modified package.json files:\n${gitStatus.stdout}`);
+	} else {
+		info(`[js-dependency-update] : No modified package.json files found.`);
 	}
 
 	info('I am a custom action');
