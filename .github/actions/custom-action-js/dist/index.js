@@ -27985,11 +27985,60 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("util");
 /***/ ((__webpack_module__, __unused_webpack___webpack_exports__, __nccwpck_require__) => {
 
 __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2782);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(3218);
 
+
+const validateBranchName = ({ branchName }) => /^[a-zA-Z0-9_\-\.\/]+$/.test(branchName);
+const validateDirectoryName = ({ dirName }) => /^[a-zA-Z0-9_\-\/]+$/.test(dirName);
+
+const setupLogger = ({ debug, prefix } = { debug: false, prefix: '' }) => ({
+	debug: (message) => {
+		if (debug) {
+			core.info(`DEBUG ${prefix}${prefix ? ' : ' : ''}${message}`);
+		}
+	},
+	info: (message) => {
+		core.info(`${prefix}${prefix ? ' : ' : ''}${message}`);
+	},
+	error: (message) => {
+		core.error(`${prefix}${prefix ? ' : ' : ''}${message}`);
+	},
+});
 
 async function run() {
-	(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__/* .info */ .pq)('Hello world from custom-action-js!');
+	const headBranch = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__/* .getInput */ .V4)('head-branch', { required: true });
+	const baseBranch = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__/* .getInput */ .V4)('base-branch', { required: true });
+	const workingDirectory = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__/* .getInput */ .V4)('working-directory', { required: true });
+	const debug = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__/* .getBooleanInput */ .Vt)('debug', { required: false });
+	const ghToken = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__/* .getInput */ .V4)('gh-token', { required: true });
+
+	const logger = setupLogger({ debug, prefix: '[dependency-update]' });
+
+	const commonExecOptions = {
+		cwd: workingDirectory,
+	};
+
+	(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__/* .setSecret */ .Pq)(ghToken);
+
+	logger.debug('Validating inputs');
+	if (!validateBranchName({ branchName: headBranch })) {
+		logger.error(`Invalid head branch name: ${headBranch}`);
+		return;
+	}
+	if (!validateBranchName({ branchName: baseBranch })) {
+		logger.error(`Invalid base branch name: ${baseBranch}`);
+		return;
+	}
+	if (!validateDirectoryName({ dirName: workingDirectory })) {
+		logger.error(`Invalid working directory name: ${workingDirectory}`);
+		return;
+	}
+
+	logger.info(`Base Branch is: ${baseBranch}`);
+	logger.info(`Head Branch is: ${headBranch}`);
+	logger.info(`Working Directory is: ${workingDirectory}`);
+
+	// Here you would add the logic to update dependencies, create a pull request, etc.
 }
 
 await run();
@@ -27999,19 +28048,57 @@ __webpack_async_result__();
 
 /***/ }),
 
-/***/ 2782:
+/***/ 3218:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 
 // EXPORTS
 __nccwpck_require__.d(__webpack_exports__, {
-  pq: () => (/* binding */ info)
+  Vt: () => (/* binding */ getBooleanInput),
+  V4: () => (/* binding */ getInput),
+  Pq: () => (/* binding */ core_setSecret)
 });
 
-// UNUSED EXPORTS: ExitCode, addPath, debug, endGroup, error, exportVariable, getBooleanInput, getIDToken, getInput, getMultilineInput, getState, group, isDebug, markdownSummary, notice, platform, saveState, setCommandEcho, setFailed, setOutput, setSecret, startGroup, summary, toPlatformPath, toPosixPath, toWin32Path, warning
+// UNUSED EXPORTS: ExitCode, addPath, debug, endGroup, error, exportVariable, getIDToken, getMultilineInput, getState, group, info, isDebug, markdownSummary, notice, platform, saveState, setCommandEcho, setFailed, setOutput, startGroup, summary, toPlatformPath, toPosixPath, toWin32Path, warning
 
 ;// CONCATENATED MODULE: external "os"
 const external_os_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("os");
+;// CONCATENATED MODULE: ./node_modules/@actions/core/lib/utils.js
+// We use any as a valid input type
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/**
+ * Sanitizes an input into a string so it can be passed into issueCommand safely
+ * @param input input to sanitize into a string
+ */
+function utils_toCommandValue(input) {
+    if (input === null || input === undefined) {
+        return '';
+    }
+    else if (typeof input === 'string' || input instanceof String) {
+        return input;
+    }
+    return JSON.stringify(input);
+}
+/**
+ *
+ * @param annotationProperties
+ * @returns The command properties to send with the actual annotation command
+ * See IssueCommandProperties: https://github.com/actions/runner/blob/main/src/Runner.Worker/ActionCommandManager.cs#L646
+ */
+function utils_toCommandProperties(annotationProperties) {
+    if (!Object.keys(annotationProperties).length) {
+        return {};
+    }
+    return {
+        title: annotationProperties.title,
+        file: annotationProperties.file,
+        line: annotationProperties.startLine,
+        endLine: annotationProperties.endLine,
+        col: annotationProperties.startColumn,
+        endColumn: annotationProperties.endColumn
+    };
+}
+//# sourceMappingURL=utils.js.map
 ;// CONCATENATED MODULE: ./node_modules/@actions/core/lib/command.js
 
 
@@ -28050,7 +28137,7 @@ const external_os_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta
  */
 function command_issueCommand(command, properties, message) {
     const cmd = new Command(command, properties, message);
-    process.stdout.write(cmd.toString() + os.EOL);
+    process.stdout.write(cmd.toString() + external_os_namespaceObject.EOL);
 }
 function command_issue(name, message = '') {
     command_issueCommand(name, {}, message);
@@ -28090,13 +28177,13 @@ class Command {
     }
 }
 function escapeData(s) {
-    return toCommandValue(s)
+    return utils_toCommandValue(s)
         .replace(/%/g, '%25')
         .replace(/\r/g, '%0D')
         .replace(/\n/g, '%0A');
 }
 function escapeProperty(s) {
-    return toCommandValue(s)
+    return utils_toCommandValue(s)
         .replace(/%/g, '%25')
         .replace(/\r/g, '%0D')
         .replace(/\n/g, '%0A')
@@ -30679,7 +30766,7 @@ function exportVariable(name, val) {
  * ```
  */
 function core_setSecret(secret) {
-    issueCommand('add-mask', {}, secret);
+    command_issueCommand('add-mask', {}, secret);
 }
 /**
  * Prepends inputPath to the PATH (for this action and future actions)
@@ -30832,7 +30919,7 @@ function notice(message, properties = {}) {
  * @param message info message
  */
 function info(message) {
-    process.stdout.write(message + external_os_namespaceObject.EOL);
+    process.stdout.write(message + os.EOL);
 }
 /**
  * Begin an output group.
