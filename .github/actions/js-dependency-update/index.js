@@ -32,6 +32,8 @@ const setupLogger = ({ debug, prefix } = { debug: false, prefix: '' }) => ({
 });
 
 async function run() {
+	let logger = setupLogger({ debug: false, prefix: '[js-dependency-update]' });
+
 	try {
 		info('Hello from the JS Dependency Update Action!');
 
@@ -41,7 +43,8 @@ async function run() {
 		const githubToken = getInput('gh_token', { required: true });
 		const workingDirectory = getInput('working_directory', { required: true });
 		const debug = getBooleanInput('debug');
-		const logger = setupLogger({ debug, prefix: '[js-dependency-update]' });
+		logger = setupLogger({ debug, prefix: '[js-dependency-update]' });
+		const octokit = getOctokit(githubToken);
 
 		const commonExecOptions = { cwd: workingDirectory };
 
@@ -108,9 +111,7 @@ async function run() {
 		await exec(`git push origin -u ${targetBranch}`, [], { ...commonExecOptions });
 
 		// create a pull request to the base branch using the octokit api
-		// initialize octokit with the provided github token
 		logger.debug('Fetching octokit API');
-		const octokit = getOctokit(githubToken);
 
 		logger.debug(`Creating PR using head branch: ${targetBranch}`);
 		await octokit.pulls.create({
@@ -130,8 +131,8 @@ async function run() {
 		return; //* Conclude the action execution after creating the PR
 	} catch (error) {
 		logger.error('Something went wrong while creating the PR. Check logs below.');
-		setFailed(error.message);
-		logger.error(error);
+		setFailed(error instanceof Error ? error.message : String(error));
+		logger.error(error instanceof Error ? (error.stack ?? error.message) : String(error));
 	}
 }
 
