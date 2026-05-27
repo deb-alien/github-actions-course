@@ -6,7 +6,7 @@ function validateBranchName(branchName) {
 }
 
 function validateWorkingDirectory(dirName) {
-	return /^[a-zA-Z0-9_\-\.\/]+$/.test(dirName);
+	return /^[a-zA-Z0-9_\-\/]+$/.test(dirName);
 }
 
 /**
@@ -60,13 +60,12 @@ async function run() {
 
 	// Check for modified package.json or package-lock.json files
 	const gitStatus = await getExecOutput('git status -s package*.json', [], { cwd: workingDirectory });
-	if (gitStatus.stdout.length > 0) {
-		info(`[js-dependency-update] : Detected changes in package.json files, preparing to create PR...`);
-	} else {
-		info(`[js-dependency-update] : No changes detected in package.json files, exiting.`);
+	if(gitStatus.stdout.length <= 0) {
+		info(`[js-dependency-update] : No package.json files found in the working directory, exiting.`);
+		return;
 	}
 
-  info('I am a custom action')
+	info('I am a custom action');
 }
 
 await run();

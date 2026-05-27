@@ -1,5 +1,5 @@
 name: 17 - 2 - Custom Action - JS
-run-name: 17 - 2 - Custom Action - JS 
+run-name: 17 - 2 - Custom Action - JS | BB - ${{ inputs.base_branch }} TT - ${{ inputs.target_branch }} WD - ${{ inputs.working_directory }}
 
 on:
     workflow_dispatch:
