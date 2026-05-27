@@ -16,26 +16,29 @@ on:
                 description: 'The working directory of the project to check for dependency updates'
                 default: '17-custom-actions/react-app'
                 required: true
-            gh_token:
-                description: 'Authentication token with repository access. Must have write access to contents and pull-requests'
-                required: false
             debug:
                 description: 'Whether the output debug messages to the console'
                 default: 'false'
                 required: false
 
+permissions:
+    contents: write
+    pull-requests: write
+
 jobs:
     dependency-update:
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout Code
-              uses: actions/checkout@v6
-
+            - uses: actions/checkout@v6
             - name: Check of dependency updates
+              id: update-deps
               uses: ./.github/actions/js-dependency-update
               with:
                   base_branch: ${{ inputs.base_branch }}
                   target_branch: ${{ inputs.target_branch }}
                   working_directory: ${{ inputs.working_directory }}
-                  gh_token: ${{ inputs.gh_token }}
+                  gh_token: ${{ secrets.GITHUB_TOKEN }}
                   debug: ${{ inputs.debug }}
+            - name: Print Custom Action Output
+              run: |
+                echo "Update Available: ${{ steps.update-deps.outputs.update_available }}"

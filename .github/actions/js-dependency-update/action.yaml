@@ -19,6 +19,11 @@ inputs:
     debug:
         description: 'Whether the output debug messages to the console'
         required: false
+
+outputs:
+    update_available:
+        description: 'Whether there are dependency updates available'
+
 runs:
     using: node24
     main: index.js
