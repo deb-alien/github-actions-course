@@ -1,4 +1,4 @@
-import { getBooleanInput, getInput, info, setSecret, error } from '@actions/core';
+import { error, getBooleanInput, getInput, info, setSecret } from '@actions/core';
 
 const validateBranchName = ({ branchName }) => /^[a-zA-Z0-9_\-\.\/]+$/.test(branchName);
 const validateDirectoryName = ({ dirName }) => /^[a-zA-Z0-9_\-\/]+$/.test(dirName);
