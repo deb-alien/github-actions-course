@@ -29086,9 +29086,6 @@ async function run() {
 	logger.info(`Head Branch is: ${headBranch}`);
 	logger.info(`Working Directory is: ${workingDirectory}`);
 
-	// Here you would add the logic to update dependencies, create a pull request, etc.
-	let updateAvailable = false;
-
 	// setup git, create new branch, commit changes, push branch, create pull request
 	try {
 		logger.debug('Checking for package update');
@@ -29097,11 +29094,12 @@ async function run() {
 		logger.debug('Git Status');
 		const gitStatusOutput = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_1__/* .getExecOutput */ .H)('git status -s package*.json', [], commonExecOptions);
 
-		if (gitStatusOutput.stdout <= 0) {
+		if (gitStatusOutput.stdout.trim().length === 0) {
 			logger.info('No updates available');
+			(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__/* .setOutput */ .uH)('update_available', false);
 			return;
 		}
-		updateAvailable = true;
+		(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__/* .setOutput */ .uH)('update_available', true);
 
 		logger.debug('Setting up git');
 		await setUpGit();
@@ -29139,7 +29137,7 @@ async function run() {
 		logger.info('Pull request created successfully');
 
 		logger.debug('Setting output for update availability');
-		(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__/* .setOutput */ .uH)('update_available', updateAvailable);
+		(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__/* .setOutput */ .uH)('update_available', true);
 		return;
 	} catch (error) {
 		logger.error('An error occurred while creating the pull request');
