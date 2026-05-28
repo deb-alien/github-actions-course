@@ -43,4 +43,4 @@ jobs:
                   gh-token: ${{ secrets.GITHUB_TOKEN }}
             - name: Log update availability
               run: |
-                echo "Update available: ${{ steps.update-dependencies.outputs.update_available }}"
+                  echo "Update available: ${{ steps.update-dependencies.outputs.update_available }}"
