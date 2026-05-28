@@ -78,6 +78,9 @@ async function run() {
 		logger.debug('Creating new branch');
 		await exec(`git checkout -b ${headBranch}`, [], commonExecOptions);
 
+		logger.debug('Pulling latest changes from base branch');
+		await exec(`git pull origin ${baseBranch} --rebase`, [], commonExecOptions);
+
 		logger.debug('Adding changes');
 		await exec('git add package*.json', [], commonExecOptions);
 
