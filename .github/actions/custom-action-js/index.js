@@ -24,6 +24,26 @@ async function setUpGit() {
 	await exec('git config --global user.email "github-actions[bot]@users.noreply.github.com"');
 }
 
+async function branchExists({ branchName, options }) {
+	const output = await getExecOutput(`git branch --list ${branchName}`, [], {
+		...options,
+		silent: true,
+		ignoreReturnCode: true,
+	});
+
+	return output.stdout.trim().length > 0;
+}
+
+async function remoteBranchExists({ branchName, options }) {
+	const output = await getExecOutput(`git ls-remote --heads origin ${branchName}`, [], {
+		...options,
+		silent: true,
+		ignoreReturnCode: true,
+	});
+
+	return output.stdout.trim().length > 0;
+}
+
 async function run() {
 	const headBranch = getInput('head-branch', { required: true });
 	const baseBranch = getInput('base-branch', { required: true });
@@ -59,6 +79,38 @@ async function run() {
 
 	// setup git, create new branch, commit changes, push branch, create pull request
 	try {
+		logger.debug('Setting up git');
+		await setUpGit();
+
+		logger.debug('Fetching latest refs');
+		await exec(`git fetch origin ${baseBranch} ${headBranch}`, [], {
+			...commonExecOptions,
+			ignoreReturnCode: true,
+		});
+
+		logger.debug('Checking out base branch');
+		await exec(`git checkout ${baseBranch}`, [], commonExecOptions);
+
+		logger.debug('Updating base branch');
+		await exec(`git pull origin ${baseBranch} --ff-only`, [], commonExecOptions);
+
+		const hasLocalHeadBranch = await branchExists({ branchName: headBranch, options: commonExecOptions });
+		const hasRemoteHeadBranch = await remoteBranchExists({ branchName: headBranch, options: commonExecOptions });
+
+		if (hasLocalHeadBranch) {
+			logger.debug('Checking out existing local head branch');
+			await exec(`git checkout ${headBranch}`, [], commonExecOptions);
+		} else if (hasRemoteHeadBranch) {
+			logger.debug('Checking out head branch from remote');
+			await exec(`git checkout -b ${headBranch} origin/${headBranch}`, [], commonExecOptions);
+		} else {
+			logger.debug('Creating new head branch from base branch');
+			await exec(`git checkout -b ${headBranch}`, [], commonExecOptions);
+		}
+
+		logger.debug('Rebasing head branch on latest base branch');
+		await exec(`git rebase origin/${baseBranch}`, [], commonExecOptions);
+
 		logger.debug('Checking for package update');
 		await exec('npm update', [], commonExecOptions);
 
@@ -72,15 +124,6 @@ async function run() {
 		}
 		setOutput('update_available', true);
 
-		logger.debug('Setting up git');
-		await setUpGit();
-
-		logger.debug('Creating new branch');
-		await exec(`git checkout -b ${headBranch}`, [], commonExecOptions);
-
-		logger.debug('Pulling latest changes from base branch');
-		await exec(`git pull origin ${baseBranch} --rebase`, [], commonExecOptions);
-
 		logger.debug('Adding changes');
 		await exec('git add .', [], commonExecOptions);
 
@@ -88,7 +131,7 @@ async function run() {
 		await exec('git commit -m "Update dependencies"', [], commonExecOptions);
 
 		logger.debug('Pushing changes');
-		await exec(`git push origin -u ${headBranch}`, [], commonExecOptions);
+		await exec(`git push origin ${headBranch} --force-with-lease`, [], commonExecOptions);
 	} catch (error) {
 		logger.error('An error occurred while updating dependencies or pushing changes');
 		setFailed(error.message);
@@ -100,6 +143,23 @@ async function run() {
 	try {
 		logger.debug('Creating pull request');
 		const octokit = getOctokit(ghToken);
+
+		const existingPrs = await octokit.rest.pulls.list({
+			owner: context.repo.owner,
+			repo: context.repo.repo,
+			head: `${context.repo.owner}:${headBranch}`,
+			base: baseBranch,
+			state: 'open',
+			per_page: 1,
+		});
+
+		if (existingPrs.data.length > 0) {
+			logger.info(`Pull request already exists: #${existingPrs.data[0].number}`);
+			logger.debug('Setting output for update availability');
+			setOutput('update_available', true);
+			return;
+		}
+
 		await octokit.rest.pulls.create({
 			owner: context.repo.owner,
 			repo: context.repo.repo,
