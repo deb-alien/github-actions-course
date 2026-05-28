@@ -29073,6 +29073,25 @@ async function remoteBranchExists({ branchName, options }) {
 	return output.stdout.trim().length > 0;
 }
 
+async function rebaseHeadOnBaseOrRecreate({ baseBranch, headBranch, options, logger }) {
+	logger.debug('Rebasing head branch on latest base branch');
+	const rebaseOutput = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_1__/* .getExecOutput */ .H)(`git rebase origin/${baseBranch}`, [], {
+		...options,
+		ignoreReturnCode: true,
+	});
+
+	if (rebaseOutput.exitCode === 0) {
+		return;
+	}
+
+	logger.info('Rebase conflict detected. Recreating head branch from base branch.');
+	await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_1__/* .exec */ .m)('git rebase --abort', [], {
+		...options,
+		ignoreReturnCode: true,
+	});
+	await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_1__/* .exec */ .m)(`git checkout -B ${headBranch} origin/${baseBranch}`, [], options);
+}
+
 async function run() {
 	const headBranch = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__/* .getInput */ .V4)('head-branch', { required: true });
 	const baseBranch = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__/* .getInput */ .V4)('base-branch', { required: true });
@@ -29137,8 +29156,12 @@ async function run() {
 			await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_1__/* .exec */ .m)(`git checkout -b ${headBranch}`, [], commonExecOptions);
 		}
 
-		logger.debug('Rebasing head branch on latest base branch');
-		await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_1__/* .exec */ .m)(`git rebase origin/${baseBranch}`, [], commonExecOptions);
+		await rebaseHeadOnBaseOrRecreate({
+			baseBranch,
+			headBranch,
+			options: commonExecOptions,
+			logger,
+		});
 
 		logger.debug('Checking for package update');
 		await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_1__/* .exec */ .m)('npm update', [], commonExecOptions);

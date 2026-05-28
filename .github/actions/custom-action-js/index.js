@@ -44,6 +44,25 @@ async function remoteBranchExists({ branchName, options }) {
 	return output.stdout.trim().length > 0;
 }
 
+async function rebaseHeadOnBaseOrRecreate({ baseBranch, headBranch, options, logger }) {
+	logger.debug('Rebasing head branch on latest base branch');
+	const rebaseOutput = await getExecOutput(`git rebase origin/${baseBranch}`, [], {
+		...options,
+		ignoreReturnCode: true,
+	});
+
+	if (rebaseOutput.exitCode === 0) {
+		return;
+	}
+
+	logger.info('Rebase conflict detected. Recreating head branch from base branch.');
+	await exec('git rebase --abort', [], {
+		...options,
+		ignoreReturnCode: true,
+	});
+	await exec(`git checkout -B ${headBranch} origin/${baseBranch}`, [], options);
+}
+
 async function run() {
 	const headBranch = getInput('head-branch', { required: true });
 	const baseBranch = getInput('base-branch', { required: true });
@@ -108,8 +127,12 @@ async function run() {
 			await exec(`git checkout -b ${headBranch}`, [], commonExecOptions);
 		}
 
-		logger.debug('Rebasing head branch on latest base branch');
-		await exec(`git rebase origin/${baseBranch}`, [], commonExecOptions);
+		await rebaseHeadOnBaseOrRecreate({
+			baseBranch,
+			headBranch,
+			options: commonExecOptions,
+			logger,
+		});
 
 		logger.debug('Checking for package update');
 		await exec('npm update', [], commonExecOptions);
