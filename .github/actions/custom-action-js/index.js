@@ -82,7 +82,7 @@ async function run() {
 		await exec(`git pull origin ${baseBranch} --rebase`, [], commonExecOptions);
 
 		logger.debug('Adding changes');
-		await exec('git add package*.json', [], commonExecOptions);
+		await exec('git add .', [], commonExecOptions);
 
 		logger.debug('Committing changes');
 		await exec('git commit -m "Update dependencies"', [], commonExecOptions);
